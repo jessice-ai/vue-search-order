@@ -1,0 +1,61 @@
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<div id="sun">
+	<span>{{message}}</span>
+	<input type="text" name="" v-model="sun_search">
+	<ul>
+		<li v-for="(sun_p,sun_index) in sun_filter_users" :key="sun_index">
+			{{sun_index}} --- {{sun_p.name}} --- {{sun_p.age}} 
+		</li>
+	</ul>
+	<button @click="set_orderby(1)">年龄升序</button>
+	<button @click="set_orderby(2)">年龄降序</button>
+	<button @click="set_orderby(0)">原本顺序</button>
+</div>
+<script type="text/javascript">
+var vm = new Vue({
+	el:"#sun",
+	data:{
+		message:"aa",
+		sun_search:"",
+		orderby:0, //0默认，1、升序，2、降序
+		sun_users:[
+			{"name":"黄渤",age:23},
+			{"name":"黄磊",age:24},
+			{"name":"罗志祥",age:25},
+			{"name":"王迅",age:26},
+			{"name":"孙红雷",age:28},
+		]
+	},
+
+	//computed 是Vue计算属性
+	computed:{
+		sun_filter_users(){
+			//取出相关数据
+			const {sun_users,sun_search,orderby} = this; //结构赋值
+			let sun_return_filter;
+			// filter 是过滤 对 sun_users 过滤
+			sun_return_filter = sun_users.filter(p=>{
+				return p.name.indexOf(sun_search)!=-1;
+			});
+			if(orderby!=0){
+				// sort 排序，如果返回负数 p1在前，如果返回正数，p2在前
+				sun_return_filter.sort(function(p1,p2){
+					//0默认，1、升序，2、降序
+					if(orderby===2){
+						return p2.age-p1.age;
+					}else{
+						return p1.age-p2.age;
+					}
+				})
+			}
+			return sun_return_filter;
+		}
+	},
+	methods:{
+		set_orderby(order){
+			this.orderby = order;
+		}
+	}
+
+})
+</script>
